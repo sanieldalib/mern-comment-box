@@ -18,7 +18,7 @@ class CommentForm extends Component {
   }
   handleSubmit(e){
     e.preventDefault();
-    console.log('${this.state.author} said "${this.state.text}""');
+    console.log(this.state.author + " said " + this.state.text);
   }
   render() {
     return (
