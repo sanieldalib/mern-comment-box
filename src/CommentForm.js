@@ -6,10 +6,34 @@ class CommentForm extends Component {
   constructor(props){
     super(props);
     this.state = { author: '', text: ''};
+    this.deleteComment = this.deleteComment.bind(this);
+    this.updateComment = this.updateComment.bind(this);
     this.handleAuthorChange = this.handleAuthorChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  updateComment(e){
+    e.preventDefault();
+    this.setState({toBeUpdated: !this.state.toBeUpdated});
+  }
+  handleCommentUpdate(e){
+    e.preventDefault();
+    let id = this.props.uniqueID;
+    let author = (this.state.author) ? this.state.author : null;
+    let text = (this.state.text) ? this.state.text : null;
+    let comment = { author: author, text: text};
+    this.props.onCommentUpdate(id, comment);
+    this.setState({
+      toBeUpdated: !this.state.toBeUpdated,
+      author: "",
+      text: ""
+ })
+  }
+  deleteComment(e) {
+ e.preventDefault();
+ let id = this.props.uniqueID;
+ this.props.onCommentDelete(id);
+ }
   handleAuthorChange(e){
     this.setState({ author: e.target.value });
   }
@@ -18,7 +42,12 @@ class CommentForm extends Component {
   }
   handleSubmit(e){
     e.preventDefault();
-    console.log(this.state.author + " said " + this.state.text);
+    let newauthor = this.state.author.trim();
+    let newtext = this.state.text.trim();
+
+    if(!newauthor || !newtext) return;
+    this.props.onCommentSubmit({author: newauthor, text: newtext});
+    this.setState({author: '', text:''});
   }
   render() {
     return (
